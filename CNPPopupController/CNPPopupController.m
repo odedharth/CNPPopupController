@@ -22,7 +22,9 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
 @property (nonatomic, strong) UIView *maskView;
 @property (nonatomic, strong) UITapGestureRecognizer *backgroundTapRecognizer;
 @property (nonatomic, strong) UIView *popupView;
+@property (nonatomic, strong) UIView *topBar;
 @property (nonatomic, strong) NSArray *views;
+@property (nonatomic, strong) CNPPopupButton *button;
 @property (nonatomic) BOOL dismissAnimated;
 
 @end
@@ -36,10 +38,10 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
         self.views = contents;
         
         self.popupView = [[UIView alloc] initWithFrame:CGRectZero];
-        self.popupView.backgroundColor = [UIColor greenColor];
-        self.popupView.clipsToBounds = YES;
+        self.popupView.backgroundColor = [UIColor whiteColor];
+      //  self.popupView.clipsToBounds = YES;
         self.maskView = [[UIView alloc] initWithFrame:self.applicationWindow.bounds];
-        self.maskView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.3];
+        self.maskView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
         self.backgroundTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleBackgroundTapGesture:)];
         self.backgroundTapRecognizer.delegate = self;
         [self.maskView addGestureRecognizer:self.backgroundTapRecognizer];
@@ -47,7 +49,20 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
         
         self.theme = [CNPPopupTheme defaultTheme];
 
+        self.topBar = [[UIView alloc] initWithFrame:CGRectZero];
+        self.topBar.backgroundColor = [UIColor colorWithRed:0.969f green:0.588f blue:0.133f alpha:1.00f];
+        
+
+
+        
+        [self.popupView addSubview:self.topBar];
+
+        
+        
         [self addPopupContents];
+        
+
+        
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -136,7 +151,7 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
         maskBackgroundColor = self.popupView.backgroundColor;
     }
     else {
-        maskBackgroundColor = self.theme.maskType == CNPPopupMaskTypeClear?[UIColor clearColor] : [UIColor colorWithWhite:0.0 alpha:0.7];
+        maskBackgroundColor = self.theme.maskType == CNPPopupMaskTypeClear?[UIColor clearColor] : [UIColor colorWithWhite:0.0 alpha:0.4];
     }
     self.maskView.backgroundColor = maskBackgroundColor;
 }
@@ -183,6 +198,22 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
     result.width += inset.left + inset.right;
     result.height = MIN(INFINITY, MAX(0.0f, result.height + inset.bottom));
     if (update) self.popupView.frame = CGRectMake(0, 0, result.width, result.height);
+    self.topBar.frame = CGRectMake(0, 0, result.width, 35);
+    
+    UIImage *buttonImage = [UIImage imageNamed:@"badgeX"];
+   // CGPoint point = [[UIApplication sharedApplication].keyWindow.rootViewController.view convertPoint:self.popupView.frame.origin toView:nil];
+    CGPoint point = CGPointMake(self.popupView.frame.size.width - buttonImage.size.width/2 - 5,-buttonImage.size.height/2 + 5);
+
+    self.button = [[CNPPopupButton alloc] initWithFrame:CGRectMake(point.x, point.y, buttonImage.size.width, buttonImage.size.height)];
+    [self.button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    self.button.selectionHandler = ^(CNPPopupButton *button){
+        [self dismissPopupControllerAnimated:YES];
+        NSLog(@"Block for button: %@", button.titleLabel.text);
+    };
+
+    
+    [self.popupView addSubview:self.button];
+    
     return result;
 }
 
@@ -334,7 +365,10 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
             dismissed = self.theme.dismissesOppositeDirection?CGPointMake(-self.popupView.bounds.size.width, self.maskView.center.y):CGPointMake(self.maskView.bounds.size.width+self.popupView.bounds.size.width, self.maskView.center.y);
             break;
         case CNPPopupPresentationStyleSlideInFromTop:
-            dismissed = self.theme.dismissesOppositeDirection?CGPointMake(self.maskView.center.x, self.maskView.bounds.size.height + self.popupView.bounds.size.height):CGPointMake(self.maskView.center.x, -self.popupView.bounds.size.height);
+            dismissed = self.theme.dismissesOppositeDirection?CGPointMake(self.maskView.center.x, -self.popupView.bounds.size.height):CGPointMake(self.maskView.center.x, self.maskView.bounds.size.height + self.popupView.bounds.size.height);
+            if (self.theme.popupStyle == CNPPopupStyleActionSheet) {
+                dismissed = CGPointMake(self.maskView.center.x, self.maskView.bounds.size.height + self.popupView.bounds.size.height);
+            }
             break;
         default:
             dismissed = self.maskView.center;
@@ -401,9 +435,9 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
     CNPPopupTheme *defaultTheme = [[CNPPopupTheme alloc] init];
     defaultTheme.backgroundColor = [UIColor whiteColor];
     defaultTheme.cornerRadius = 4.0f;
-    defaultTheme.popupContentInsets = UIEdgeInsetsMake(16.0f, 16.0f, 16.0f, 16.0f);
+    defaultTheme.popupContentInsets = UIEdgeInsetsMake(35.0f, 16.0f, 16.0f, 16.0f);
     defaultTheme.popupStyle = CNPPopupStyleCentered;
-    defaultTheme.presentationStyle = CNPPopupPresentationStyleSlideInFromBottom;
+    defaultTheme.presentationStyle = CNPPopupPresentationStyleSlideInFromTop;
     defaultTheme.dismissesOppositeDirection = NO;
     defaultTheme.maskType = CNPPopupMaskTypeDimmed;
     defaultTheme.shouldDismissOnBackgroundTouch = YES;

@@ -206,8 +206,9 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
 
     self.button = [[CNPPopupButton alloc] initWithFrame:CGRectMake(point.x, point.y, buttonImage.size.width, buttonImage.size.height)];
     [self.button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    __weak typeof(self) weakSelf = self;
     self.button.selectionHandler = ^(CNPPopupButton *button){
-        [self dismissPopupControllerAnimated:YES];
+        [weakSelf dismissPopupControllerAnimated:YES];
         NSLog(@"Block for button: %@", button.titleLabel.text);
     };
 
@@ -435,13 +436,13 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
     CNPPopupTheme *defaultTheme = [[CNPPopupTheme alloc] init];
     defaultTheme.backgroundColor = [UIColor whiteColor];
     defaultTheme.cornerRadius = 4.0f;
-    defaultTheme.popupContentInsets = UIEdgeInsetsMake(35.0f, 16.0f, 16.0f, 16.0f);
+    defaultTheme.popupContentInsets = UIEdgeInsetsMake(47.0f, 16.0f, 16.0f, 16.0f);
     defaultTheme.popupStyle = CNPPopupStyleCentered;
     defaultTheme.presentationStyle = CNPPopupPresentationStyleSlideInFromTop;
     defaultTheme.dismissesOppositeDirection = NO;
     defaultTheme.maskType = CNPPopupMaskTypeDimmed;
     defaultTheme.shouldDismissOnBackgroundTouch = YES;
-    defaultTheme.contentVerticalPadding = 16.0f;
+    defaultTheme.contentVerticalPadding = 4.0f;
     defaultTheme.maxPopupWidth = 300.0f;
     return defaultTheme;
 }

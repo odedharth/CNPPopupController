@@ -19,18 +19,6 @@
 @implementation ViewController
 
 
--(void)showPopupCentered:(id)sender {
-    [self showPopupWithStyle:CNPPopupStyleCentered];
-}
-
-- (void)showPopupFormSheet:(id)sender {
-    [self showPopupWithStyle:CNPPopupStyleActionSheet];
-}
-
-- (void)showPopupFullscreen:(id)sender {
-    [self showPopupWithStyle:CNPPopupStyleFullscreen];
-}
-
 - (void)showPopupWithStyle:(CNPPopupStyle)popupStyle {
     
     NSMutableParagraphStyle *paragraphStyle = NSMutableParagraphStyle.new;
@@ -91,6 +79,20 @@
 
 - (void)popupControllerDidPresent:(CNPPopupController *)controller {
     NSLog(@"Popup controller presented.");
+}
+
+#pragma mark - event response
+
+-(void)showPopupCentered:(id)sender {
+    [self showPopupWithStyle:CNPPopupStyleCentered];
+}
+
+- (void)showPopupFormSheet:(id)sender {
+    [self showPopupWithStyle:CNPPopupStyleActionSheet];
+}
+
+- (void)showPopupFullscreen:(id)sender {
+    [self showPopupWithStyle:CNPPopupStyleFullscreen];
 }
 
 @end

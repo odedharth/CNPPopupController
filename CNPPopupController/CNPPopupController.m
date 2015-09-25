@@ -72,12 +72,10 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
                                                  selector:@selector(orientationWillChange)
                                                      name:UIApplicationWillChangeStatusBarOrientationNotification
                                                    object:nil];
-        if (CNP_SYSTEM_VERSION_LESS_THAN(@"8.0")) {
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(orientationChanged)
                                                      name:UIApplicationDidChangeStatusBarOrientationNotification
                                                    object:nil];
-        }
     }
     return self;
 }
@@ -107,7 +105,9 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
     [UIView animateWithDuration:0.3 animations:^{
         self.maskView.frame = self.applicationWindow.bounds;
         self.popupView.center = [self endingPoint];
-        self.popupView.transform = transform;
+        if (CNP_SYSTEM_VERSION_LESS_THAN(@"8.0")) {
+            self.popupView.transform = transform;
+        }
     }];
 }
 
@@ -442,6 +442,7 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
     defaultTheme.dismissesOppositeDirection = NO;
     defaultTheme.maskType = CNPPopupMaskTypeDimmed;
     defaultTheme.shouldDismissOnBackgroundTouch = YES;
+    defaultTheme.movesAboveKeyboard = YES;
     defaultTheme.contentVerticalPadding = 4.0f;
     defaultTheme.maxPopupWidth = 300.0f;
     return defaultTheme;

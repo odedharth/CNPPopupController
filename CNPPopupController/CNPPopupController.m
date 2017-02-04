@@ -82,6 +82,10 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
     return self;
 }
 
+-(void)hideXButton {
+    self.button.hidden = true;
+}
+
 - (void)dealloc {
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];

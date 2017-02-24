@@ -47,15 +47,25 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
         [self.maskView addGestureRecognizer:self.backgroundTapRecognizer];
         [self.maskView addSubview:self.popupView];
         
+        
         self.theme = [CNPPopupTheme defaultTheme];
 
-        self.topBar = [[UIView alloc] initWithFrame:CGRectZero];
-        self.topBar.backgroundColor = [UIColor colorWithRed:0.969f green:0.588f blue:0.133f alpha:1.00f];
         
-
+//        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.popupView.bounds byRoundingCorners:( UIRectCornerBottomLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(4.0, 4.0)];
+//        
+//        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+//        maskLayer.frame = self.popupView.bounds;
+//        maskLayer.path  = maskPath.CGPath;
+//        self.popupView.layer.mask = maskLayer;
 
         
-        [self.popupView addSubview:self.topBar];
+//        self.topBar = [[UIView alloc] initWithFrame:CGRectZero];
+//        self.topBar.backgroundColor = [UIColor colorWithRed:0.969f green:0.588f blue:0.133f alpha:1.00f];
+//        
+//
+//
+//        
+//        [self.popupView addSubview:self.topBar];
 
         
         
@@ -204,7 +214,7 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
     if (update) self.popupView.frame = CGRectMake(0, 0, result.width, result.height);
     self.topBar.frame = CGRectMake(0, 0, result.width, 35);
     
-    UIImage *buttonImage = [UIImage imageNamed:@"badgeX"];
+    UIImage *buttonImage = [UIImage imageNamed:@"ic_no"];
    // CGPoint point = [[UIApplication sharedApplication].keyWindow.rootViewController.view convertPoint:self.popupView.frame.origin toView:nil];
     CGPoint point = CGPointMake(self.popupView.frame.size.width - buttonImage.size.width/2 - 5,-buttonImage.size.height/2 + 5);
 
@@ -440,7 +450,7 @@ CGFloat UIInterfaceOrientationAngleOfOrientation(UIInterfaceOrientation orientat
     CNPPopupTheme *defaultTheme = [[CNPPopupTheme alloc] init];
     defaultTheme.backgroundColor = [UIColor whiteColor];
     defaultTheme.cornerRadius = 4.0f;
-    defaultTheme.popupContentInsets = UIEdgeInsetsMake(47.0f, 16.0f, 16.0f, 16.0f);
+    defaultTheme.popupContentInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     defaultTheme.popupStyle = CNPPopupStyleCentered;
     defaultTheme.presentationStyle = CNPPopupPresentationStyleSlideInFromTop;
     defaultTheme.dismissesOppositeDirection = NO;
